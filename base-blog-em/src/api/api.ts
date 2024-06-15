@@ -1,4 +1,5 @@
 import { Post } from "../types/posts/Post.type";
+import { PostComment } from "../types/posts/PostComment.type";
 
 export async function fetchPosts(pageNum = 1): Promise<Post[]> {
   const response = await fetch(
@@ -7,7 +8,7 @@ export async function fetchPosts(pageNum = 1): Promise<Post[]> {
   return response.json();
 }
 
-export async function fetchComments(postId: number) {
+export async function fetchComments(postId: number): Promise<PostComment[]> {
   const response = await fetch(
     `https://jsonplaceholder.typicode.com/comments?postId=${postId}`
   );
