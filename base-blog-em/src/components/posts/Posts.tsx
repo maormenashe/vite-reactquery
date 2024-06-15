@@ -3,9 +3,9 @@ import { useEffect, useState } from "react";
 import { Post } from "../../types/posts/Post.type";
 import PostDetail from "./PostDetail/PostDetail";
 import usePaginatedPostsQuery from "./queries/hooks/usePaginatedPostsQuery";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postQueryKeys } from "./queries/posts-query-key-factory";
-import { fetchPosts } from "../../api/api";
+import { deletePost, fetchPosts } from "../../api/api";
 
 interface IPostsProps {}
 
@@ -16,6 +16,14 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const queryClient = useQueryClient();
+
+  // The delete mutation is declared here only for the propose
+  // of showing the use and need of .reset() since the status
+  // is consisted when moving between the posts
+  const deleteMutation = useMutation({
+    mutationFn: (postId: number) => deletePost(postId),
+  });
+
   useEffect(() => {
     if (currentPage >= maxPostPage) return;
 
@@ -44,6 +52,11 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
 
   if (!posts) return <h3>No posts...</h3>;
 
+  const handleSelectPostClick = (post: Post) => {
+    deleteMutation.reset();
+    setSelectedPost(post);
+  };
+
   const handleNextPageClick = () => setCurrentPage((prevPage) => prevPage + 1);
 
   const handlePreviousPageClick = () =>
@@ -56,7 +69,7 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
           <li
             key={post.id}
             className="post-title"
-            onClick={() => setSelectedPost(post)}
+            onClick={() => handleSelectPostClick(post)}
           >
             {post.title}
           </li>
@@ -75,7 +88,9 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
         </button>
       </div>
       <hr />
-      {selectedPost && <PostDetail post={selectedPost} />}
+      {selectedPost && (
+        <PostDetail post={selectedPost} deleteMutation={deleteMutation} />
+      )}
     </>
   );
 };
