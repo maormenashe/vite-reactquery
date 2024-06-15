@@ -2,15 +2,14 @@ import * as React from "react";
 import { useState } from "react";
 import { Post } from "../../types/posts/Post.type";
 import PostDetail from "./PostDetail/PostDetail";
-import { useQuery } from "@tanstack/react-query";
-import { fetchPosts } from "../../api/api";
+import usePaginatedPostsQuery from "./queries/hooks/usePaginatedPostsQuery";
 
 interface IPostsProps {}
 
-// const maxPostPage = 10;
+const maxPostPage = 10;
 
 const Posts: React.FunctionComponent<IPostsProps> = () => {
-  const [currentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
 
   const {
@@ -18,11 +17,7 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
     isError,
     error,
     isLoading,
-  } = useQuery({
-    queryKey: ["posts"],
-    queryFn: () => fetchPosts(),
-    staleTime: 2 * 1000,
-  });
+  } = usePaginatedPostsQuery(currentPage);
 
   if (isLoading) return <h3>Loading...</h3>;
 
@@ -34,6 +29,11 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
     );
 
   if (!posts) return <h3>No posts...</h3>;
+
+  const handleNextPageClick = () => setCurrentPage((prevPage) => prevPage + 1);
+
+  const handlePreviousPageClick = () =>
+    setCurrentPage((prevPage) => prevPage - 1);
 
   return (
     <>
@@ -49,11 +49,14 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
         ))}
       </ul>
       <div className="pages">
-        <button disabled onClick={() => {}}>
+        <button disabled={currentPage <= 1} onClick={handlePreviousPageClick}>
           Previous page
         </button>
-        <span>Page {currentPage + 1}</span>
-        <button disabled onClick={() => {}}>
+        <span>Page {currentPage}</span>
+        <button
+          disabled={currentPage >= maxPostPage}
+          onClick={handleNextPageClick}
+        >
           Next page
         </button>
       </div>
