@@ -21,6 +21,7 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
   } = useQuery({
     queryKey: ["posts"],
     queryFn: () => fetchPosts(),
+    staleTime: 2 * 1000,
   });
 
   if (isLoading) return <h3>Loading...</h3>;
