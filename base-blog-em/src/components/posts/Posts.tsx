@@ -5,7 +5,7 @@ import PostDetail from "./PostDetail/PostDetail";
 import usePaginatedPostsQuery from "./queries/hooks/usePaginatedPostsQuery";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { postQueryKeys } from "./queries/posts-query-key-factory";
-import { deletePost, fetchPosts } from "../../api/api";
+import { deletePost, fetchPosts, updatePost } from "../../api/api";
 
 interface IPostsProps {}
 
@@ -18,10 +18,13 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
   const queryClient = useQueryClient();
 
   // The delete mutation is declared here only for the propose
-  // of showing the use and need of .reset() since the status
-  // is consisted when moving between the posts
+  // of taking care of mutation reset.
   const deleteMutation = useMutation({
     mutationFn: (postId: number) => deletePost(postId),
+  });
+
+  const updateMutation = useMutation({
+    mutationFn: (postId: number) => updatePost(postId),
   });
 
   useEffect(() => {
@@ -54,6 +57,7 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
 
   const handleSelectPostClick = (post: Post) => {
     deleteMutation.reset();
+    updateMutation.reset();
     setSelectedPost(post);
   };
 
@@ -89,7 +93,11 @@ const Posts: React.FunctionComponent<IPostsProps> = () => {
       </div>
       <hr />
       {selectedPost && (
-        <PostDetail post={selectedPost} deleteMutation={deleteMutation} />
+        <PostDetail
+          post={selectedPost}
+          deleteMutation={deleteMutation}
+          updateMutation={updateMutation}
+        />
       )}
     </>
   );

@@ -7,10 +7,11 @@ import { UseMutationResult } from "@tanstack/react-query";
 type PostDetailProps = {
   post: Post;
   deleteMutation: UseMutationResult<unknown, Error, number, unknown>;
+  updateMutation: UseMutationResult<unknown, Error, number, unknown>;
 };
 
 const PostDetail: React.FunctionComponent<PostDetailProps> = (props) => {
-  const { post, deleteMutation } = props;
+  const { post, deleteMutation, updateMutation } = props;
 
   const {
     data: comments,
@@ -49,7 +50,21 @@ const PostDetail: React.FunctionComponent<PostDetailProps> = (props) => {
         )}
       </div>
       <div>
-        <button>Update title</button>
+        <button onClick={() => updateMutation.mutate(post.id)}>
+          Update title
+        </button>
+
+        {updateMutation.isPending && (
+          <p className="loading">Updating the post</p>
+        )}
+        {updateMutation.isError && (
+          <p className="error">
+            Error updating the post: {updateMutation.error.toString()}
+          </p>
+        )}
+        {updateMutation.isSuccess && (
+          <p className="success">Post was (not) updated</p>
+        )}
       </div>
       <p>{post.body}</p>
       <h4>Comments</h4>
