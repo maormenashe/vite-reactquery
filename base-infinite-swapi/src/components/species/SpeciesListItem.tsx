@@ -1,20 +1,20 @@
 import * as React from "react";
-import { Species } from "../../types/species/Species.type";
+import { SpeciesDto } from "../../types/api/species/Species.dto.type";
 
 type SpeciesListItemProps = {
-  species: Species;
+  species: SpeciesDto;
 };
 
 const SpeciesListItem: React.FunctionComponent<SpeciesListItemProps> = ({
   species,
 }) => {
-  const { name, language, averageLifespan } = species;
+  const { name, language, average_lifespan } = species;
   return (
     <li>
       {name}
       <ul>
         <li>language: {language}</li>
-        <li>average lifespan: {averageLifespan}</li>
+        <li>average lifespan: {average_lifespan}</li>
       </ul>
     </li>
   );

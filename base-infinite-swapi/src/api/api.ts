@@ -1,6 +1,6 @@
 import { PaginationResponse } from "../types/api/pagination/pagination.response.type";
 import { PersonDto } from "../types/api/people/Person.dto.type";
-import { Species } from "../types/species/Species.type";
+import { SpeciesDto } from "../types/api/species/Species.dto.type";
 
 export async function fetchPeople(
   pageNumber: number = 1
@@ -11,7 +11,11 @@ export async function fetchPeople(
   return response.json();
 }
 
-export async function fetchSpecies(): Promise<Species[]> {
-  const response = await fetch("https://swapi.dev/api/species/");
+export async function fetchSpecies(
+  pageNumber: number = 1
+): Promise<PaginationResponse<SpeciesDto>> {
+  const response = await fetch(
+    `https://swapi.dev/api/species/?page=${pageNumber}`
+  );
   return response.json();
 }
