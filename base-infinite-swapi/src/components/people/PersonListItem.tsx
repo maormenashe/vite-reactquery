@@ -1,20 +1,20 @@
 import * as React from "react";
-import { Person } from "../../types/people/Person.type";
+import { PersonDto } from "../../types/api/people/Person.dto.type";
 
 type PersonListItemProps = {
-  person: Person;
+  person: PersonDto;
 };
 
 const PersonListItem: React.FunctionComponent<PersonListItemProps> = ({
   person,
 }) => {
-  const { name, hairColor, eyeColor } = person;
+  const { name, hair_color, eye_color } = person;
   return (
     <li>
       {name}
       <ul>
-        <li>hair: {hairColor}</li>
-        <li>eyes: {eyeColor}</li>
+        <li>hair: {hair_color}</li>
+        <li>eyes: {eye_color}</li>
       </ul>
     </li>
   );
