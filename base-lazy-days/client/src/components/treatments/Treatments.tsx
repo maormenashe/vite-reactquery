@@ -1,6 +1,7 @@
+import { Box, Heading, HStack } from "@chakra-ui/react";
+
 import { useTreatments } from "./hooks/useTreatments";
 import { Treatment } from "./Treatment";
-import { Box, Heading, HStack } from "@chakra-ui/react";
 
 export function Treatments() {
   const { data } = useTreatments();

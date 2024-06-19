@@ -1,8 +1,10 @@
-import { axiosInstance } from "@/axiosInstance";
-import { queryKeys } from "@/react-query/constants";
-import { Staff } from "@shared/types";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+
+import { Staff } from "@shared/types";
+
+import { axiosInstance } from "@/axiosInstance";
+import { queryKeys } from "@/react-query/constants";
 
 async function getStaff(): Promise<Staff[]> {
   const { data } = await axiosInstance.get("/staff");
