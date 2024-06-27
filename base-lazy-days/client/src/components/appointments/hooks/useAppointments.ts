@@ -47,6 +47,9 @@ export function useAppointments() {
     initialData: fallback,
     queryFn: () => getAppointments(monthYear.year, monthYear.month),
     select: (data) => selectFn(data, showAll),
+    staleTime: 0,
+    gcTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: true,
   });
 
   const queryClient = useQueryClient();
@@ -59,6 +62,8 @@ export function useAppointments() {
         nextMonthYear.month,
       ],
       queryFn: () => getAppointments(nextMonthYear.year, nextMonthYear.month),
+      staleTime: 0,
+      gcTime: 5 * 60 * 1000,
     });
   }, [monthYear, queryClient]);
 
