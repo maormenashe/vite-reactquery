@@ -50,6 +50,7 @@ export function useAppointments() {
     staleTime: 0,
     gcTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true,
+    refetchInterval: 60 * 1000,
   });
 
   const queryClient = useQueryClient();
