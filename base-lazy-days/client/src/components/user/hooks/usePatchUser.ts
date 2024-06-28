@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import jsonpatch from "fast-json-patch";
 
 import type { User } from "@shared/types";
@@ -7,6 +7,9 @@ import { axiosInstance, getJWTHeader } from "../../../axiosInstance";
 import { useUser } from "./useUser";
 
 import { useCustomToast } from "@/components/app/hooks/useCustomToast";
+import { queryKeys } from "@/react-query/constants";
+
+export const PATCH_USER_MUTATION_KEY = "patch-user";
 
 // for when we need a server function
 async function patchUserOnServer(
@@ -29,14 +32,20 @@ async function patchUserOnServer(
 }
 
 export function usePatchUser() {
-  const { user, updateUser } = useUser();
+  const queryClient = useQueryClient();
+  const { user } = useUser();
   const toast = useCustomToast();
 
   const { mutate: patchUser } = useMutation({
+    mutationKey: [PATCH_USER_MUTATION_KEY],
     mutationFn: (newData: User) => patchUserOnServer(newData, user),
-    onSuccess: (userData: User | null) => {
+    onSuccess: () => {
       toast({ title: "user updated!", status: "success" });
-      updateUser(userData);
+    },
+    onSettled: async (data, error, variables, context) => {
+      return await queryClient.invalidateQueries({
+        queryKey: [queryKeys.user],
+      });
     },
   });
 
