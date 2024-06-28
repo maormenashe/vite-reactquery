@@ -5,8 +5,8 @@ import type { User } from "@shared/types";
 
 import { useLoginData } from "@/auth/AuthContext";
 import { axiosInstance, getJWTHeader } from "@/axiosInstance";
-import { generateUserKey } from "@/react-query/key-factories";
 import { queryKeys } from "@/react-query/constants";
+import { generateUserKey } from "@/react-query/key-factories";
 
 async function getUser(userId: number, userToken: string) {
   const { data }: AxiosResponse<{ user: User }> = await axiosInstance.get(
@@ -40,6 +40,10 @@ export function useUser() {
   function clearUser() {
     queryClient.removeQueries({
       queryKey: [queryKeys.user],
+    });
+
+    queryClient.removeQueries({
+      queryKey: [queryKeys.appointments, queryKeys.user],
     });
   }
 
